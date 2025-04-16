@@ -1,66 +1,49 @@
+// Author: Minh Pham
+// Date: 2025-15-04
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
 #include <iostream>
 #include <set>
 #include <climits>
-
+#include <vector>
 
 using namespace std;
 
-
-// nodes are essentially just their key value
-// These are special commands which define
-// 		"nodekey_t" to mean "unsigned long long int"
-//		"INVALID_NODE_KEY" to mean "UULONG_MAX" (where UULONG_MAX = 18446744073709551615)
+// Defines nodekey_t as an unsigned long long int for node identification
 #define nodekey_t unsigned long long int
 #define INVALID_NODE_KEY ULLONG_MAX
 
-
-// when coding, be careful to ensure that every instance of
-// a GraphEdge is created on the heap
+// Structure representing a graph edge with its source node, destination node, and weight
 struct GraphEdge {
-	nodekey_t from;
-	nodekey_t to;
-	unsigned int weight;
+    nodekey_t from;
+    nodekey_t to;
+    unsigned int weight;
 };
 
-
 class Graph{
-	
-	public:
-		//Graph(); // you may add this, it is ungraded
-		//Graph(const Graph&); // you may add this, it is ungraded
-		~Graph();
+    
+    public:
+        ~Graph(); // Destructor to clean up dynamically allocated memory
 
+        void AddNode(nodekey_t key = 0); // Adds a new node to the graph if it does not already exist
+        const GraphEdge* AddEdge(nodekey_t fromNodeKey, nodekey_t toNodeKey, unsigned int weight = 0); // Adds a new edge between two nodes, checking for duplicates
 
-		// both of these should throw an invalid_argument exception if invalid inputs are given
-		// such as a duplicate node key or a node key that doesn't exist in the graph
-		void AddNode(nodekey_t key = 0);
-		const GraphEdge* AddEdge(nodekey_t fromNodeKey, nodekey_t toNodeKey, unsigned int weight = 0);
-		
-		// this method returns true if the given key is in use in the graph
-		bool IsPresent(nodekey_t key) const;
+        bool IsPresent(nodekey_t key) const; // Checks if a given node exists in the graph
 
-		// These are not actually used except for testing / debugging
-		string NodesToString() const; // all nodes
-		string EdgesToString() const; // all edges
-		
-		
-		// These are sets since the order shouldn't matter (theoretically, a graph has no order)
-		set<const GraphEdge*> GetOutwardEdgesFrom(nodekey_t nodeKey) const; // get pointers to the edges that go out from the given node
-		set<nodekey_t> GetNodes() const; // gets all the nodes in the graph
-		// set<const GraphEdge*> GetEdges() const; // gets all edges in the graph (), you may add this it is ungraded
+        string NodesToString() const; // Returns a string representation of all the nodes in the graph
+        string EdgesToString() const; // Returns a string representation of all edges in the graph
 
-		size_t Size() const; // num edges
-		size_t Order() const; // num nodes
-	
-	
-	private:
-		// TODO:
-		// put your code here!
-	
+        set<const GraphEdge*> GetOutwardEdgesFrom(nodekey_t nodeKey) const; // Retrieves all outward edges from a given node
+        set<nodekey_t> GetNodes() const; // Retrieves all the nodes present in the graph
+
+        size_t Size() const; // Returns the total number of edges in the graph
+        size_t Order() const; // Returns the total number of nodes in the graph
+    
+    private:
+        vector<nodekey_t> nodes; // Stores the nodes of the graph
+        vector<vector <GraphEdge*>> adjList; // Adjacency list to store edges between nodes
 };
 
 #endif
-	
